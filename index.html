@@ -119,12 +119,14 @@
           position: absolute;
           font-size: 1.6em;
           padding: 2px 8px;
-          background: rgb(255 255 255 / 55%)
+          background: rgb(255 255 255 / 55%);
+          text-shadow: 0 0 5px #bbbbbb;
         }
         .card h3 {
           margin-top: -36px;
           text-align: left;
           font-size: 1.5em;
+          text-shadow: 0 0 5px #e1e1e1;
         }
         .card img {
           max-width: 100%;
@@ -165,6 +167,7 @@
         .containerprice {
           font-size: 2em;
           font-weight: 900;
+          color: #585858;
         }
         .remove-button {
           position: absolute;
@@ -182,6 +185,10 @@
         .remove-button:hover {
           background-color: #000;
         }
+
+        .red {color:red}
+        .green {color:green}
+        .orange {color:orange}
     </style>
     
 </head>
@@ -324,9 +331,9 @@ searchInput.addEventListener('input', function () {
 
             // Renderiza los cards filtrados
             renderCards(filteredMotos);
-        });
+});
 
-        renderCards(motos);
+renderCards(motos);
 
 
 
@@ -365,6 +372,7 @@ searchInput.addEventListener('input', function () {
               let formatted = Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }).format(totalPrice.toFixed(2));
               totalPriceElement.textContent = formatted;
               totalCountElement.textContent = totalCount;
+              updateColor(totalPrice)
 
               // Deshabilitar el card en la galería
               // card.classList.add('selected-card');
@@ -385,12 +393,30 @@ searchInput.addEventListener('input', function () {
           let formatted = Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }).format(totalPrice.toFixed(2));
           totalPriceElement.textContent = formatted;
           totalCountElement.textContent = totalCount;
+          updateColor(totalPrice)
 
+          
           // Habilitar el card en la galería
           const galleryCard = gallery.querySelector(`.card[data-title="${title}"]`);
           // galleryCard.classList.remove('selected-card');
       };
-  });
+
+
+  function updateColor(totalPrice){
+    
+    totalPriceElement.classList.remove('green', 'orange', 'red');
+    if (totalPrice <= 17000) {
+      
+    } else if (totalPrice <= 20500) {
+      totalPriceElement.classList.add('green');
+    } else if (totalPrice <= 21500) {
+      totalPriceElement.classList.add('orange');
+    } else {
+      totalPriceElement.classList.add('red');
+    }
+    
+  }
+});
 </script>
 
 </body>
