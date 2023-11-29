@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        body {
+          font-family: 'Bebas Neue', sans-serif;
+            margin: 20px;
+            text-align: center;
+            background: url(https://go.rifarito.com/assets/images/background.png) #fff center center fixed;
+            background-size: cover;
+            text-align: center;
+            height: 100vh;
+            color: #000;
+        }
+        h3 {
+          margin: 0;
+        }
+        p {
+          margin: 0;
+        }
+
+        .gallery_container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+
+        @media screen and (max-width: 768px) {
+          .card {
+            display: inline-block;
+          }
+          .gallery_container {
+            display: inherit;
+            flex-wrap: inherit;
+          }
+          .gallery {
+            display: block;
+            flex-wrap: inherit;
+            gap: inherit;
+            justify-content: inherit;
+            overflow-x: scroll;
+            white-space: nowrap;
+            width: 100%;
+          }
+        }
+
+
+        .card {
+          background: #fff;
+          padding: 10px;
+          width: 210px;
+          cursor: pointer;
+          border: 1px solid #d7e6ee;
+          border-radius: 25px;
+          box-shadow: 0 0 18px #52889069;
+          transition: opacity 0.3s ease-in-out;
+        }
+        .card img {
+          max-width: 100%;
+          width: 220px;
+          height: 200px;
+        }
+
+        .card:hover {
+            opacity: 0.8;
+        }
+
+        .selected-card {
+            opacity: 0.5;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .selected-gallery {
+            margin-top: 20px;
+        }
+
+        .selected-gallery .selected-card {
+            opacity: inherit;
+            pointer-events: inherit;
+            position: relative;
+            display: inline-block;
+            margin: 8px;
+        }
+
+        #total-price {
+            font-weight: bold;
+        }
+        .containerprice {
+          font-size: 2em;
+          font-weight: 900;
+        }
+        .remove-button {
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          background-color: #ff0000;
+          color: #fff;
+          border: none;
+          padding: 10px;
+          border-radius: 20px;
+          cursor: pointer;
+        }
+        .remove-button:hover {
+          background-color: #000;
+        }
+    </style>
+    <title>Galería de Productos</title>
+</head>
+<body>
+
+  <div class="gallery_container">
+
+    <div class="gallery" id="gallery">
+        <!-- Cards de la galería -->
+        <div class="card" data-title="Yamaha MT-09A-ABS" data-price="12990">
+          <img src="./motos/mt09.jpg" alt="Yamaha MT-09A-ABS">
+          <h3>Yamaha MT-09A-ABS</h3>
+          <p>US$12,990</p>
+        </div>
+    
+        <div class="card" data-title="Yamaha YZF-R15 VER.4.0" data-price="5149">
+          <img src="./motos/r15v4.jpg" alt="Yamaha YZF-R15 VER.4.0">
+          <h3>Yamaha YZF-R15 VER.4.0</h3>
+          <p>US$5,149</p>
+        </div>
+    
+        <div class="card" data-title="Suzuki GSX-S750" data-price="7100">
+          <img src="./motos/GSXS750.jpg" alt="Suzuki GSX-S750">
+          <h3>Suzuki GSX-S750</h3>
+          <p>Precio: $7,100</p>
+        </div>
+    
+        <div class="card" data-title="Suzuki Gixxer 250 SF" data-price="5400">
+          <img src="./motos/Gixxer250sf.jpg" alt="Suzuki Gixxer 250 SF">
+          <h3>Suzuki Gixxer 250 SF</h3>
+          <p>Precio: $5,400</p>
+        </div>
+    
+        <!-- <div class="card" data-title="Producto 5" data-price="50">
+          <img src="download-3.jpg" alt="Producto 5">
+          <h3>Producto 5</h3>
+          <p>Precio: $50</p>
+        </div>
+    
+        <div class="card" data-title="Producto 36" data-price="6">
+          <img src="download-4.jpg" alt="Producto 6">
+          <h3>Producto 36</h3>
+          <p>Precio: $60</p>
+        </div> -->
+    
+        <!-- Agrega más cards según sea necesario -->
+    
+    </div>
+  </div>
+
+
+<div class="selected-gallery">
+    <h2>SELECCIONADOS</h2>
+    <p class="containerprice">Total: $<span id="total-price">0</span></p>
+    <div id="selected-cards">
+        <!-- Cards seleccionados aparecerán aquí -->
+    </div>
+    
+</div>
+
+* Precios referenciales
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const gallery = document.getElementById('gallery');
+      const selectedCardsContainer = document.getElementById('selected-cards');
+      const totalPriceElement = document.getElementById('total-price');
+      let totalPrice = 0;
+
+      gallery.addEventListener('click', function (event) {
+          const card = event.target.closest('.card');
+
+          if (card && !card.classList.contains('selected-card')) {
+              const title = card.getAttribute('data-title');
+              const price = parseFloat(card.getAttribute('data-price'));
+
+              // Crear el nuevo card seleccionado
+              const selectedCard = document.createElement('div');
+              selectedCard.classList.add('card', 'selected-card');
+              selectedCard.innerHTML = `
+                  <img src="${card.querySelector('img').src}" alt="${title}">
+                  <h3>${title}</h3>
+                  <p>Precio: $${price}</p>
+                  <button class="remove-button" onclick="removeSelectedCard(this, ${price})">Quitar</button>
+              `;
+
+              // Agregar el card seleccionado al contenedor
+              selectedCardsContainer.appendChild(selectedCard);
+
+              // Actualizar el precio total
+              totalPrice += price;
+              totalPriceElement.textContent = totalPrice.toFixed(2);
+
+              // Deshabilitar el card en la galería
+              // card.classList.add('selected-card');
+          }
+      });
+
+      // Función para quitar un card seleccionado
+      window.removeSelectedCard = function (button, price) {
+          const selectedCard = button.closest('.selected-card');
+          const title = selectedCard.querySelector('h3').textContent;
+
+          // Remover el card seleccionado
+          selectedCard.remove();
+
+          // Actualizar el precio total
+          totalPrice -= price;
+          totalPriceElement.textContent = totalPrice.toFixed(2);
+
+          // Habilitar el card en la galería
+          const galleryCard = gallery.querySelector(`.card[data-title="${title}"]`);
+          // galleryCard.classList.remove('selected-card');
+      };
+  });
+</script>
+
+</body>
+</html>
