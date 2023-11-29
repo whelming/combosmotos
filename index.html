@@ -77,7 +77,7 @@
           cursor: pointer;
           border: 1px solid #d7e6ee;
           border-radius: 25px;
-          box-shadow: 0 0 18px #52889069;
+          box-shadow: 0 0 18px #c6c6c669;
           transition: all 0.3s ease;
         }
 
@@ -85,6 +85,7 @@
           position: absolute;
           font-size: 1.6em;
           padding: 2px 8px;
+          background: rgb(255 255 255 / 55%)
         }
         .card h3 {
           margin-top: -36px;
@@ -117,7 +118,7 @@
             position: relative;
             display: inline-block;
             margin: 8px;
-            zoom: .7;
+            zoom: .9;
         }
 
         .selected-gallery .card:hover {
@@ -139,7 +140,7 @@
           color: #fff;
           border: none;
           font-size: 1.5em;
-          padding: 14px 20px;
+          padding: 8px 14px;
           font-weight: 900;
           border-radius: 20px;
           cursor: pointer;
@@ -154,44 +155,9 @@
   <div><h1>Arma tu Combo</h1> </div>
   <div class="gallery_container">
     <div class="gallery" id="gallery">
-        <!-- Cards de la galería -->
-        <div class="card" data-title="Yamaha MT-09A-ABS" data-price="12990">
-          <p>USD 12,990</p>
-          <img src="./motos/mt09.jpg" alt="Yamaha MT-09A-ABS">
-          <h3>Yamaha MT-09A-ABS</h3>
-        </div>
-    
-        <div class="card" data-title="Yamaha YZF-R15 VER.4.0" data-price="5149">
-          <p>USD 5,149</p>
-          <img src="./motos/r15v4.jpg" alt="Yamaha YZF-R15 VER.4.0">
-          <h3>Yamaha YZF-R15 VER.4.0</h3>
-        </div>
-    
-        <div class="card" data-title="Suzuki GSX-S750" data-price="7100">
-          <p>USD 7,100</p>
-          <img src="./motos/GSXS750.jpg" alt="Suzuki GSX-S750">
-          <h3>Suzuki GSX-S750</h3>
-        </div>
-    
-        <div class="card" data-title="Suzuki Gixxer 250 SF" data-price="5400">
-          <p>USD 5,400</p>
-          <img src="./motos/Gixxer250sf.jpg" alt="Suzuki Gixxer 250 SF">
-          <h3>Suzuki Gixxer 250 SF</h3>
-        </div>
-    
-        <!-- <div class="card" data-title="Producto 5" data-price="50">
-          <img src="download-3.jpg" alt="Producto 5">
-          <h3>Producto 5</h3>
-          <p>Precio: $50</p>
-        </div>
-    
-        <div class="card" data-title="Producto 36" data-price="6">
-          <img src="download-4.jpg" alt="Producto 6">
-          <h3>Producto 36</h3>
-          <p>Precio: $60</p>
-        </div> -->
-    
-        <!-- Agrega más cards según sea necesario -->
+ 
+
+  
     
     </div>
   </div>
@@ -210,6 +176,80 @@
 <p>* Precios referenciales</p>
 
 <script>
+
+document.addEventListener('DOMContentLoaded', function () {
+  const motos = [
+    {
+      title: "Yamaha MT-09A-ABS",
+      price: 13000,
+      imageSrc: "./motos/mt09.jpg"
+    },
+    {
+      title: "Yamaha YZF-R15 VER.4.0",
+      price: 5100,
+      imageSrc: "./motos/r15v4.jpg"
+    },
+    {
+      title: "Suzuki GSX-S750",
+      price: 7500,
+      imageSrc: "./motos/GSXS750.jpg"
+    },
+    {
+      title: "Suzuki Gixxer 250 SF",
+      price: 6000,
+      imageSrc: "./motos/Gixxer250sf.jpg"
+    },
+    {
+      title: "Yamaha YZF-R7",
+      price: 17000,
+      imageSrc: "./motos/YZF-R7.jpg"
+    },
+    {
+      title: "Yamaha FZS3.0",
+      price: 3000,
+      imageSrc: "./motos/FZS3.0.jpg"
+    },
+    {
+      title: "Suzuki GSX-R150",
+      price: 5000,
+      imageSrc: "./motos/GSX-R150.jpg"
+    },
+    {
+      title: "Yamaha MT-07",
+      price: 11000,
+      imageSrc: "./motos/MT-07.jpg"
+    },
+    {
+      title: "Yamaha YZF-R3 ABS",
+      price: 7500,
+      imageSrc: "./motos/YZF-R3.jpg"
+    },
+    {
+      title: "Yamaha MT-03",
+      price: 7500,
+      imageSrc: "./motos/MT-03.jpg"
+    }
+  ];
+      
+  const gallery = document.getElementById('gallery');
+  motos.forEach(moto => {
+    const card = document.createElement('div');
+    let formattePrice = Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }).format(moto.price);
+    card.classList.add('card');
+    card.setAttribute('data-title', moto.title);
+    card.setAttribute('data-price', moto.price);
+
+    card.innerHTML = `
+      <p>${formattePrice}</p>
+      <img src="${moto.imageSrc}" alt="${moto.title}">
+      <h3>${moto.title}</h3>
+    `;
+
+    // Agrega el card a la galería
+    gallery.appendChild(card);
+  });
+});
+
   document.addEventListener('DOMContentLoaded', function () {
       const gallery = document.getElementById('gallery');
       const selectedCardsContainer = document.getElementById('selected-cards');
