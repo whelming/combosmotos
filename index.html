@@ -10,13 +10,20 @@
     <style>
         body {
           font-family: 'Bebas Neue', sans-serif;
-            margin: 20px;
             text-align: center;
-            background: url(https://go.rifarito.com/assets/images/background.png) #fff center center fixed;
+            /* background: url(https://go.rifarito.com/assets/images/background.png) #fff center center fixed; */
+            background: #f5f5f5;
             background-size: cover;
             text-align: center;
             height: 100vh;
             color: #000;
+            margin: 20px 0;
+        }
+        h1 {
+          margin-bottom: 0;
+        }
+        h2 {
+          margin-bottom: 0;
         }
         h3 {
           margin: 0;
@@ -55,11 +62,15 @@
             overflow-x: scroll;
             white-space: nowrap;
             width: 100%;
+            padding: 10px;
           }
         }
 
 
         .card {
+          overflow: hidden;
+          position: relative;
+          opacity: .8;
           background: #fff;
           padding: 10px;
           width: 210px;
@@ -67,7 +78,17 @@
           border: 1px solid #d7e6ee;
           border-radius: 25px;
           box-shadow: 0 0 18px #52889069;
-          transition: opacity 0.3s ease-in-out;
+          transition: all 0.3s ease;
+        }
+
+        .card p {
+          position: absolute;
+          font-size: 1.6em;
+          padding: 2px 8px;
+        }
+        .card h3 {
+          margin-top: -36px;
+          text-align: left;
         }
         .card img {
           max-width: 100%;
@@ -76,12 +97,14 @@
         }
 
         .card:hover {
-            opacity: 0.8;
+            opacity: 1;
+            box-shadow: 0 0 18px #004a6e;
+            transition: all 0.8s ease;
         }
 
         .selected-card {
             opacity: 0.5;
-            pointer-events: none;
+
             position: relative;
         }
 
@@ -91,10 +114,14 @@
 
         .selected-gallery .selected-card {
             opacity: inherit;
-            pointer-events: inherit;
             position: relative;
             display: inline-block;
             margin: 8px;
+            zoom: .7;
+        }
+
+        .selected-gallery .card:hover {
+          box-shadow: 0 0 18px #52889069;
         }
 
         #total-price {
@@ -108,10 +135,12 @@
           position: absolute;
           top: 5px;
           right: 5px;
-          background-color: #ff0000;
+          background-color: #d80000;
           color: #fff;
           border: none;
-          padding: 10px;
+          font-size: 1.5em;
+          padding: 14px 20px;
+          font-weight: 900;
           border-radius: 20px;
           cursor: pointer;
         }
@@ -122,33 +151,32 @@
     
 </head>
 <body>
-
-  <h1>Arma tu Combo</h1>
+  <div><h1>Arma tu Combo</h1> </div>
   <div class="gallery_container">
     <div class="gallery" id="gallery">
         <!-- Cards de la galería -->
         <div class="card" data-title="Yamaha MT-09A-ABS" data-price="12990">
+          <p>USD 12,990</p>
           <img src="./motos/mt09.jpg" alt="Yamaha MT-09A-ABS">
           <h3>Yamaha MT-09A-ABS</h3>
-          <p>US$12,990</p>
         </div>
     
         <div class="card" data-title="Yamaha YZF-R15 VER.4.0" data-price="5149">
+          <p>USD 5,149</p>
           <img src="./motos/r15v4.jpg" alt="Yamaha YZF-R15 VER.4.0">
           <h3>Yamaha YZF-R15 VER.4.0</h3>
-          <p>US$5,149</p>
         </div>
     
         <div class="card" data-title="Suzuki GSX-S750" data-price="7100">
+          <p>USD 7,100</p>
           <img src="./motos/GSXS750.jpg" alt="Suzuki GSX-S750">
           <h3>Suzuki GSX-S750</h3>
-          <p>Precio: $7,100</p>
         </div>
     
         <div class="card" data-title="Suzuki Gixxer 250 SF" data-price="5400">
+          <p>USD 5,400</p>
           <img src="./motos/Gixxer250sf.jpg" alt="Suzuki Gixxer 250 SF">
           <h3>Suzuki Gixxer 250 SF</h3>
-          <p>Precio: $5,400</p>
         </div>
     
         <!-- <div class="card" data-title="Producto 5" data-price="50">
@@ -170,22 +198,25 @@
 
 
 <div class="selected-gallery">
-    <h2>SELECCIONADOS</h2>
-    <p class="containerprice">Total: $<span id="total-price">0</span></p>
+    <h2>SELECCIONADOS: <span id="total-count">0</span></h2>
+    <p class="containerprice">Total: <span id="total-price">USD 0.00</span></p>
     <div id="selected-cards">
         <!-- Cards seleccionados aparecerán aquí -->
     </div>
     
 </div>
 
-* Precios referenciales
+<p>* Fotos referenciales</p>
+<p>* Precios referenciales</p>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
       const gallery = document.getElementById('gallery');
       const selectedCardsContainer = document.getElementById('selected-cards');
       const totalPriceElement = document.getElementById('total-price');
+      const totalCountElement = document.getElementById('total-count');
       let totalPrice = 0;
+      let totalCount = 0;
 
       gallery.addEventListener('click', function (event) {
           const card = event.target.closest('.card');
@@ -197,11 +228,12 @@
               // Crear el nuevo card seleccionado
               const selectedCard = document.createElement('div');
               selectedCard.classList.add('card', 'selected-card');
+              let formattePrice = Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }).format(price);
               selectedCard.innerHTML = `
+                  <p>${formattePrice}</p>
                   <img src="${card.querySelector('img').src}" alt="${title}">
                   <h3>${title}</h3>
-                  <p>Precio: $${price}</p>
-                  <button class="remove-button" onclick="removeSelectedCard(this, ${price})">Quitar</button>
+                  <button class="remove-button" onclick="removeSelectedCard(this, ${price})">X</button>
               `;
 
               // Agregar el card seleccionado al contenedor
@@ -209,7 +241,10 @@
 
               // Actualizar el precio total
               totalPrice += price;
-              totalPriceElement.textContent = totalPrice.toFixed(2);
+              totalCount++;
+              let formatted = Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }).format(totalPrice.toFixed(2));
+              totalPriceElement.textContent = formatted;
+              totalCountElement.textContent = totalCount;
 
               // Deshabilitar el card en la galería
               // card.classList.add('selected-card');
@@ -226,7 +261,10 @@
 
           // Actualizar el precio total
           totalPrice -= price;
-          totalPriceElement.textContent = totalPrice.toFixed(2);
+          totalCount--;
+          let formatted = Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }).format(totalPrice.toFixed(2));
+          totalPriceElement.textContent = formatted;
+          totalCountElement.textContent = totalCount;
 
           // Habilitar el card en la galería
           const galleryCard = gallery.querySelector(`.card[data-title="${title}"]`);
