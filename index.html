@@ -32,16 +32,45 @@
           margin: 0;
         }
 
+        input#searchInput {
+          border: 0;
+          padding: 2px 0 0 10px;
+          height: 30px;
+          margin: -1px 0 2px 0;
+          font-weight: 700;
+          font-size: 18px;
+          text-align: center;
+          box-shadow: none;
+          width: 169px;
+          border-radius: 12px;
+        }
+
+        button#resetSearch {
+          background: #fff;
+          border: 0;
+          padding: 8px 18px;
+          font-weight: 900;
+          border-radius: 15px;
+          position: absolute;
+          margin-top: -1px;
+          margin-left: -19px;
+          cursor: pointer;
+      }
+      button#resetSearch:hover {
+        background: #000;
+        color: #fff;
+      }
+
         .gallery_container {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 2px;
             justify-content: center;
         }
         .gallery {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 2px;
             justify-content: center;
         }
 
@@ -73,6 +102,7 @@
           opacity: .8;
           background: #fff;
           padding: 10px;
+          margin: 5px;
           width: 210px;
           cursor: pointer;
           border: 1px solid #d7e6ee;
@@ -118,7 +148,6 @@
             position: relative;
             display: inline-block;
             margin: 8px;
-            zoom: .9;
         }
 
         .selected-gallery .card:hover {
@@ -140,7 +169,7 @@
           color: #fff;
           border: none;
           font-size: 1.5em;
-          padding: 8px 14px;
+          padding: 6px 12px;
           font-weight: 900;
           border-radius: 20px;
           cursor: pointer;
@@ -153,12 +182,11 @@
 </head>
 <body>
   <div><h1>Arma tu Combo</h1> </div>
+  <div><input type="text" id="searchInput" placeholder="Buscar..."> <button id="resetSearch" class="btn-reset-search" value="Reset">X</button> </div>
+  
   <div class="gallery_container">
     <div class="gallery" id="gallery">
  
-
-  
-    
     </div>
   </div>
 
@@ -177,11 +205,10 @@
 
 <script>
 
-document.addEventListener('DOMContentLoaded', function () {
-  const motos = [
+const motos = [
     {
       title: "Yamaha MT-09A-ABS",
-      price: 13000,
+      price: 15400,
       imageSrc: "./motos/mt09.jpg"
     },
     {
@@ -191,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     {
       title: "Suzuki GSX-S750",
-      price: 7500,
+      price: 14500,
       imageSrc: "./motos/GSXS750.jpg"
     },
     {
@@ -221,34 +248,81 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     {
       title: "Yamaha YZF-R3 ABS",
-      price: 7500,
+      price: 8000,
       imageSrc: "./motos/YZF-R3.jpg"
     },
     {
       title: "Yamaha MT-03",
-      price: 7500,
+      price: 8000,
       imageSrc: "./motos/MT-03.jpg"
     }
   ];
-      
+
   const gallery = document.getElementById('gallery');
-  motos.forEach(moto => {
+// document.addEventListener('DOMContentLoaded', function () {
+  
+      
+  // motos.forEach(moto => {
+  //   const card = document.createElement('div');
+  //   let formattePrice = Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }).format(moto.price);
+  //   card.classList.add('card');
+  //   card.setAttribute('data-title', moto.title);
+  //   card.setAttribute('data-price', moto.price);
+
+  //   card.innerHTML = `
+  //     <p>${formattePrice}</p>
+  //     <img src="${moto.imageSrc}" alt="${moto.title}">
+  //     <h3>${moto.title}</h3>
+  //   `;
+  //   gallery.appendChild(card);
+  // });
+// });
+
+const searchInput = document.getElementById('searchInput');
+const resetInput = document.getElementById('resetSearch');
+
+resetInput.addEventListener('click', function (event) {
+  searchInput.value = ""
+  renderCards(motos);
+})
+
+function renderCards(filteredMotos) {
+  // Limpia la galería antes de volver a renderizar
+  gallery.innerHTML = '';
+
+  // Recorre el array de motos y crea los cards
+  filteredMotos.forEach(moto => {
     const card = document.createElement('div');
-    let formattePrice = Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }).format(moto.price);
-    card.classList.add('card');
-    card.setAttribute('data-title', moto.title);
-    card.setAttribute('data-price', moto.price);
+                card.classList.add('card');
+                card.setAttribute('data-title', moto.title);
+                card.setAttribute('data-price', moto.price);
 
-    card.innerHTML = `
-      <p>${formattePrice}</p>
-      <img src="${moto.imageSrc}" alt="${moto.title}">
-      <h3>${moto.title}</h3>
-    `;
+                card.innerHTML = `
+                    <p>USD ${moto.price}</p>
+                    <img src="${moto.imageSrc}" alt="${moto.altText}">
+                    <h3>${moto.title}</h3>
+                `;
 
-    // Agrega el card a la galería
-    gallery.appendChild(card);
-  });
-});
+                // Agrega el card a la galería
+                gallery.appendChild(card);    
+  })
+}
+
+searchInput.addEventListener('input', function () {
+            const searchTerm = searchInput.value.toLowerCase();
+
+            // Filtra las motos según el término de búsqueda
+            const filteredMotos = motos.filter(moto =>
+                moto.title.toLowerCase().includes(searchTerm)
+            );
+
+            // Renderiza los cards filtrados
+            renderCards(filteredMotos);
+        });
+
+        renderCards(motos);
+
+
 
   document.addEventListener('DOMContentLoaded', function () {
       const gallery = document.getElementById('gallery');
