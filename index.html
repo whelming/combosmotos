@@ -298,12 +298,13 @@ function renderCards(filteredMotos) {
   // Recorre el array de motos y crea los cards
   filteredMotos.forEach(moto => {
     const card = document.createElement('div');
+    let formattePrice = Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }).format(moto.price);
                 card.classList.add('card');
                 card.setAttribute('data-title', moto.title);
                 card.setAttribute('data-price', moto.price);
 
                 card.innerHTML = `
-                    <p>USD ${moto.price}</p>
+                    <p>${formattePrice}</p>
                     <img src="${moto.imageSrc}" alt="${moto.altText}">
                     <h3>${moto.title}</h3>
                 `;
